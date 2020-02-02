@@ -39,22 +39,7 @@ class CategoryController extends Controller
     public function update(Request $request, Category $proizvodjac)
     {
         if(!$request->aktivan){
-            try {
-                DB::beginTransaction();
-                foreach($proizvodjac->proizvodi as $proizvod){
-                    $proizvod->update(['aktivan' => false]);
-                }
-                $proizvodjac->update($this->validateRequest());
-                if(request()->has('slika')){
-                    Storage::delete('public/' . $proizvodjac->slika);
-                    $this->storeImage($proizvodjac);
-                }
-                DB::commit();
-                return redirect('/proizvodjaci')->withErrors(['poruka' => 'Proizvođač je uspešno izmenjen!']);
-            } catch(\Exception $e){
-                DB::rollback();
-                return back()->withErrors(['poruka' => 'Došlo je do greške, pokušajte ponovo!']);
-            }
+            $this->transactionUpdate($proizvodjac, true);
         }
 
         $proizvodjac->update($this->validateRequest());
@@ -70,20 +55,7 @@ class CategoryController extends Controller
 
     public function status(Category $proizvodjac){
 
-        try {
-            DB::beginTransaction();
-            foreach($proizvodjac->proizvodi as $proizvod){
-                $proizvod->update(['aktivan' => false]);
-                // automatski aktivira sve proizvode reaktivacijom proizvođača
-                // $proizvod->update(['aktivan' => ! $proizvod->aktivan]);
-            }
-            $proizvodjac->update(['aktivan' => ! $proizvodjac->aktivan]);
-            DB::commit();
-            return back()->withErrors(['poruka' => 'Proizvođač je aktiviran/deaktiviran!']);
-        } catch(\Exception $e){
-            DB::rollback();
-            return back()->withErrors(['poruka' => 'Došlo je do greške, pokušajte ponovo!']);
-        }
+        $this->transactionUpdate($proizvodjac, false);
 
         // samo zabranjuje deaktiviranje ako ima proizvoda
         // if(!count($proizvodjac->proizvodi) > 0){
@@ -131,6 +103,36 @@ class CategoryController extends Controller
             $proizvodjac->update([
                 'slika' => request()->slika->store( '/slike/proizvodjaci', 'public'),
             ]);
+        }
+    }
+
+    private function transactionUpdate($proizvodjac, $cond){
+        try {
+            DB::beginTransaction();
+            foreach($proizvodjac->proizvodi as $proizvod){
+                $proizvod->update(['aktivan' => false]);
+            }
+
+            if($cond){
+                $proizvodjac->update($this->validateRequest());
+                if(request()->has('slika')){
+                    Storage::delete('public/' . $proizvodjac->slika);
+                    $this->storeImage($proizvodjac);
+                }
+                DB::commit();
+                $message = 'Proizvođač je uspešno izmenjen!';
+            }
+
+            if(!$cond) {
+                $proizvodjac->update(['aktivan' => !$proizvodjac->aktivan]);
+                DB::commit();
+                $message = 'Proizvođač je uspešno aktiviran/deaktiviran!';
+            }
+
+            return redirect()->to('/proizvodjaci')->withErrors(['poruka' => $message])->send();
+        } catch(\Exception $e){
+            DB::rollback();
+            return back()->withErrors(['poruka' => 'Došlo je do greške, pokušajte ponovo!']);
         }
     }
 }
