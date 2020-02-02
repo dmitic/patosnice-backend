@@ -19,7 +19,7 @@ class CreateSlidersTable extends Migration
             $table->string('nad_naslov')->nullable();
             $table->string('naziv_linka')->nullable();
             $table->string('link')->nullable();
-            $table->string('slika');
+            $table->string('slika')->nullable();
             $table->string('redosled');
             $table->boolean('aktivan');
             $table->timestamps();

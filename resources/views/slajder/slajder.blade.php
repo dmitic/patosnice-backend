@@ -37,7 +37,7 @@
               <!-- /widget-header -->
               <div class="widget-content">
                 <form class="form-horizontal">
-                  <a href="{{ route('dodaj_admina') }}" class="btn btn-primary"> Dodaj</a>
+                  <a href="{{ route('dodaj_slajder') }}" class="btn btn-primary"> Dodaj</a>
                 </form>
                 <table class="table table-striped table-bordered table-responsive">
                   <thead>
@@ -53,11 +53,9 @@
                     @foreach ($slajderi as $slajder)
                     <tr>
                       <td> {{ $slajder->naziv }} </td>
-                      <td> <img src="/slike/slajder/{{ $slajder->slika }}" style="height:50px;"> </td>
+                      <td> <img src="{{ asset('/storage/' . ($slajder->slika ?? 'slike/noimage.png')) }}" alt="{{$slajder->naziv}}" style="height:50px;"> </td>
                       <td> {{ $slajder->redosled }} </td>
-                      {{-- <td> {{ $user->is_active ? 'Aktivan' : 'Neaktivan' }} </td> --}}
                       <td> 
-                        {{-- <form action="#" method="post"> --}}
                         <form action="{{ route('statusSlajdera', ['slider' => $slajder->id]) }}" method="post">
                           @csrf
                           @method('PUT')
@@ -69,8 +67,7 @@
                         <form action="{{route('obrisi_slajder', ['slider' => $slajder->id])}}" method="post">
                           @csrf
                           @method('delete')
-                          <a href="#" class="btn btn-small btn-success" title="Izmeni"> <i class="btn-icon-only icon-pencil"> </i> </a>
-                          {{-- <a href="{{route('izmeni_admina', ['user' => $user->id])}}" class="btn btn-small btn-success" title="Izmeni"> <i class="btn-icon-only icon-pencil"> </i> </a> --}}
+                          <a href="{{route('izmeni_slajder', ['slider' => $slajder->id])}}" class="btn btn-small btn-success" title="Izmeni"> <i class="btn-icon-only icon-pencil"> </i> </a>
                           <button type="submit" class="btn btn-danger btn-small" title="Obriši" onclick="return confirm('Da li ste sigurni?')" > <i class="btn-icon-only icon-remove"> </i> </button>
                         </form>
                       </td>

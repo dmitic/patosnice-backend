@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
 @section('title')
-    {{'Dodavanje administratora'}}
+    {{'Dodavanje Slajdera'}}
 @endsection
 
-@section('active_dash')
+@section('active_slajder')
 {{'active'}}
 @endsection
 
 @section('podnaslov')
-    {{ 'Dodavanje admina' }}
+    {{ 'Dodavanje slajdera' }}
 @endsection
 
 @section('content')
@@ -25,48 +25,53 @@
 
             <div class="widget widget-table action-table">
               <div class="widget-header"> <i class="icon-th-list"></i>
-                <h3>Administratori</h3>
+                <h3>Slajderi</h3>
               </div>
               <!-- /widget-header -->
               <div class="widget-content">
                 <legend>Dodaj</legend>
-                <form action="{{ route('dodaj_admina') }}" method="post">
+                <form action="{{ route('dodaj_slajder') }}" method="post" enctype="multipart/form-data">
                   @csrf
                 <div class="row">
                   <div class="span6">
-                    <label for="name"><span class="required">* </span>Ime i prezime:</label>
-                      <input id="name" type="text" name="name" class="span6" value="{{ old('name') }}" required>
-                      @error('name')
+                    <label for="naziv"><span class="required">* </span>Naziv:</label>
+                      <input id="naziv" type="text" name="naziv" class="span6" value="{{ old('naziv') }}" required>
+                      @error('naziv')
                       <p class="greska"><small>{{ $message }}</small></p>
                       @enderror
-                    <label for="username"><span class="required">* </span>Korisničko ime:</label>
-                      <input id="username" type="text" name="username" class="span6" value="{{ old('username') }}" required>
-                      @error('username')
+                    <label for="nad_naslov">Nadnaslov:</label>
+                      <input id="nad_naslov" type="text" name="nad_naslov" class="span6" value="{{ old('nad_naslov') }}">
+                      @error('nad_naslov')
                       <p class="greska"><small>{{ $message }}</small></p>
                       @enderror
-                    <label for="password"><span class="required">* </span>Lozinka:</label>
-                      <input id="password" type="text" name="password" class="span3" required>
-                      @error('password')
+                    <label for="naziv_linka">Naziv linka:</label>
+                      <input id="naziv_linka" type="text" name="naziv_linka" value="{{ old('naziv_linka') }}" class="span3">
+                      @error('naziv_linka')
                         <p class="greska"><small>{{ $message }}</small></p>
                       @enderror
-                    <label for="email"><span class="required">* </span>Email:</label>
-                      <input id="email" type="text" name="email" class="span5" value="{{ old('email') }}" required>
-                      @error('email')
+                    <label for="link">link:</label>
+                      <input id="link" type="text" name="link" class="span5" value="{{ old('link') }}">
+                      @error('link')
                       <p class="greska"><small>{{ $message }}</small></p>
                       @enderror
                   </div>
 
                   <div class="span4">
-                    <label for="prioritet"><span class="required">* </span>Prioritet:</label>
-                      <input id="prioritet" type="text" name="prioritet" class="span1" value="{{ old('prioritet') }}">
-                      @error('prioritet')
+                    <label for="slika">Slika <em>dimenzija 870x380px</em>:</label>
+                    <input type="file" name="slika" id="slika">
+                    @error('slika')
+                      <p class="greska"><small>{{ $message }}</small></p>
+                    @enderror
+                    <label for="redosled"><span class="required">* </span>Redosled:</label>
+                      <input id="redosled" type="text" name="redosled" class="span1" value="{{ old('redosled') }}">
+                      @error('redosled')
                       <p class="greska"><small>{{ $message }}</small></p>
                       @enderror
                     <label for="">Aktivan</label>
                       <label class="radio"> 
-                        <input type="radio" name="is_active" value="1" checked="checked"> Da </label> 
+                        <input type="radio" name="aktivan" value="1" checked="checked"> Da </label> 
                       <label class="radio"> 
-                        <input type="radio" name="is_active" value="0"> Ne </label>
+                        <input type="radio" name="aktivan" value="0"> Ne </label>
                   </div>
 
                 </div>

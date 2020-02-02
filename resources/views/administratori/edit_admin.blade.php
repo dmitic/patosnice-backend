@@ -29,7 +29,7 @@
               </div>
               <!-- /widget-header -->
               <div class="widget-content">
-                <legend>Izmeni</legend>
+                <legend>Izmeni administratora: {{ $user->name }}</legend>
                 <form action="{{ route('izmeni_admina', ['user' => $user]) }}" method="post">
                   @csrf
                   @method('put')
@@ -46,7 +46,7 @@
                       @error('username')
                       <p class="greska"><small>{{ $message }}</small></p>
                       @enderror
-                    <label for="password"><span class="required">* </span>Lozinka:</label>
+                    <label for="password">Lozinka:</label>
                       <input id="password" type="text" name="password" class="span3">
                       @error('password')
                       <p class="greska"><small>{{ $message }}</small></p>
@@ -59,16 +59,16 @@
                   </div>
 
                   <div class="span4">
-                    <label for="prioritet">Prioritet:</label>
+                    <label for="prioritet"><span class="required">* </span>Prioritet:</label>
                       <input id="prioritet" type="text" name="prioritet" class="span1" value="{{ $user->prioritet ?? old('prioritet') }}">
                       @error('prioritet')
                       <p class="greska"><small>{{ $message }}</small></p>
                       @enderror
                     <label for="">Aktivan</label>
                       <label class="radio"> 
-                        <input type="radio" name="is_active" value="1" checked="checked" > Da </label> 
+                        <input type="radio" name="is_active" value="1" {{$user->is_active ? 'checked' : ''}} > Da </label> 
                       <label class="radio"> 
-                        <input type="radio" name="is_active" value="0" {{ Auth::user()->id === $user->id ? 'disabled' : '' }}> Ne </label>
+                        <input type="radio" name="is_active" value="0" {{!$user->is_active ? 'checked' : ''}} {{ Auth::user()->id === $user->id ? 'disabled' : '' }}> Ne </label>
                   </div>
 
                 </div>

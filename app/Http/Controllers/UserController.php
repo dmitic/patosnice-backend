@@ -28,49 +28,34 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        // $request->validate([
-        //     'name' => 'required',
-        //     'username' => 'required',
-        //     'password' => 'required|min:8',
-        //     'email' => 'required',
-        //     'is_active' => 'required|max:1',
-        // ]);
-
-
         $user->update($request->validate([
             'name' => 'required',
-            'password' => 'required|min:8',
             'email' => 'required',
             'is_active' => 'required|max:1',
         ]));
 
-        // $user->fill($request->only([
-        //     'name' => request()->name,
-        //     'username' => request()->username,
-        //     'password' => request()->password,
-        //     'email' => request()->email,
-        //     'is_active' => request()->is_active,
-        //     'prioritet' => request()->prioritet ?? 2,
-        // ]));
-        // $user->save();
-
-        // $user->update($request->all());
-
         $user->update([
             'name' => request()->name,
             'username' => request()->username,
-            'password' => request()->password,
             'email' => request()->email,
             'is_active' => request()->is_active,
             'prioritet' => request()->prioritet ?? 2,
         ]);
+
+        if(request()->password){
+            request()->validate([
+                'password' => 'min:8',
+            ]);
+            $user->update([
+                'password' => request()->password,
+            ]);  
+        }
 
         return redirect('/home')->withErrors(['poruka' => 'Administrator je uspešno izmenjen!']);
     }
 
     public function store(Request $request)
     {
-
         $request->validate([
             'name' => 'required',
             'username' => 'required|unique:users,username',

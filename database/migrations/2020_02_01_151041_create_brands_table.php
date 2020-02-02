@@ -17,7 +17,7 @@ class CreateBrandsTable extends Migration
             $table->bigIncrements('id');
             $table->string('naziv');
             $table->string('slug')->nullable();
-            $table->string('slika');
+            $table->string('slika')->nullable();
             $table->string('redosled');
             $table->boolean('aktivan');
             $table->timestamps();
